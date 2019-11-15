@@ -127,7 +127,7 @@
                                 selected_items.push(uid);
                             else selected_items = array_remove(selected_items, uid);
 
-                            $("#textarea-role-code").text(discord_code());
+                            $("#textarea-role-code").text('cb!role ' + discord_code());
                         });
 
                         console.log(category + ' ' + label + ' ' + image + ' ' + uid);
