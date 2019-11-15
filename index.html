@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Cheeseburger - Choose your Roles</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link
+        href="https://fonts.googleapis.com/css?family=Barlow:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.2/css/all.css'>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- CHEESEBURGER ITEM TEMPLATE -->
+    <div id="cheeseburger-item-template" uk-scrollspy="target: > div; cls: uk-animation-fade; delay: 500" hidden>
+        <!-- UIkit CARD 1 -->
+        <div class="uk-visible-toggle" tabindex="-1">
+            <div class="uk-margin uk-card uk-card-default uk-card-hover" style="max-width: 248px; max-height:248px;">
+                <!-- UIkit CARD BODY -->
+                <div class="uk-card-body">
+                    <div class="uk-flex uk-flex-center">
+                        <div class="uk-inline uk-light">
+                            <img src="" alt="" class="cheeseburger-item-template-picture card-img uk-align-top" uk-img>
+                            <div class="uk-position-center cheeseburger-item-selected" hidden>
+                                <span><i class="fas fa-check fa-3x"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="uk-card-title uk-margin cheeseburger-item-template-label">Unspecified
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END CHEESEBURGER ITEM TEMPLATE -->
+
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/css/uikit.min.css" />
+    <!-- UIkit SECTION -->
+    <img src="img/logo.jpg" width="20%" height="20%" class="uk-logo uk-position-top-center uk-position-relative uk-img">
+    <h1 class="uk-logo uk-position-top-center uk-position-relative" style="margin-top: 0px; margin-bottom: -50px;">
+        Choose your Discord Roles</h1>
+    <p class="uk-position-top-center uk-position-relative" style="margin-top: 60px; margin-bottom: -20px;">
+        You can show others what your favourite burger consists of when they click on your Discord name.
+    </p>
+
+    <img src="img/burger-sample.png" width="20%" height="20%" class="uk-logo uk-position-center-right" uk-img>
+
+    <div class="uk-section uk-section-default">
+        <div class="uk-container">
+            <div class="uk-margin uk-card uk-card-default uk-card-body">
+                <h1 class="uk-heading-divider uk-card-title">1. Choose Your Favourite Burger Establishment</h1>
+                <div class="uk-margin uk-grid-match uk-grid-collapse uk-child-width-1-4@l uk-text-center"
+                    id="role-options-container-restaurant" uk-grid>
+                </div>
+            </div>
+
+            <div class="uk-margin uk-card uk-card-default uk-card-body">
+                <h1 class="uk-heading-divider uk-card-title">2. Choose Your Preferred Doneness</h1>
+                <div class="uk-margin uk-grid-match uk-grid-collapse uk-child-width-1-4@l uk-text-center"
+                    id="role-options-container-doneness" uk-grid>
+                </div>
+            </div>
+
+            <div class="uk-margin uk-card uk-card-default uk-card-body">
+                <h1 class="uk-heading-divider uk-card-title">3. Choose Your Preferred Toppings</h1>
+                <div class="uk-margin uk-grid-match uk-grid-collapse uk-child-width-1-4@l uk-text-center"
+                    id="role-options-container-toppings" uk-grid>
+                </div>
+            </div>
+
+            <div class="uk-margin uk-card uk-card-default uk-card-body">
+                <h1 class="uk-heading-divider uk-card-title">4. Choose Your Preferred Condiments</h1>
+                <div class="uk-margin uk-grid-match uk-grid-collapse uk-child-width-1-4@l uk-text-center"
+                    id="role-options-container-condiments" uk-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="uk-position-bottom-center uk-position-relative" style="margin-top: -40px; margin-bottom: -20px;">
+        This is your role code. Copy and paste the following text in #cheeseburger-commands to obtain your roles.
+        <br>
+        <div class="uk-margin uk-position-bottom-center uk-position-relative" style="width: 800px;">
+            <textarea id="textarea-role-code" class="uk-textarea" rows="5" placeholder="Select some items above to get a role code." readonly></textarea>
+        </div>
+    </p>
+
+    <!-- UIkit JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit-icons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <script>
+        var selected_items = [];
+
+        $(() => {
+            $.getJSON("https://api.jsonbin.io/b/5dce0c3cad0335638b110ef9/latest", (data) => {
+                $.each(data, (key, val) => {
+                    var category = key;
+
+                    $.each(val, (k, v) => {
+                        var label = v.label;
+                        var image = v.image;
+
+                        var uid = category + '-' + label;
+
+                        var item = $('#cheeseburger-item-template').clone().attr('hidden', false);
+                        item.attr('id', 'cheeseburger-item-' + uid);
+                        item.find(".cheeseburger-item-template-picture").first().prop('src', image);
+                        item.find(".cheeseburger-item-template-label").first().text(label);
+                        item.on('click', () => {
+                            var checkmark = item.find('.cheeseburger-item-selected');
+                            checkmark.attr('hidden', !checkmark.attr('hidden'));
+
+                            item.find(".cheeseburger-item-template-picture").first().toggleClass('item-selected');
+                            item.find('.uk-card-body').first().toggleClass('card-selected');
+
+                            if (!selected_items.includes(uid))
+                                selected_items.push(uid);
+                            else selected_items = array_remove(selected_items, uid);
+
+                            $("#textarea-role-code").text(discord_code());
+                        });
+
+                        console.log(category + ' ' + label + ' ' + image + ' ' + uid);
+
+                        item.appendTo('#role-options-container-' + category);
+                    });
+                });
+            });
+
+            $(document).on('dragstart', 'img', function (e) { e.preventDefault(); });
+        });
+
+        function array_remove(arr, value) {
+            return arr.filter((ele) => {
+                return ele != value;
+            });
+        }
+
+        function discord_code() {
+            return btoa(selected_items.join('|'));
+        }
+
+    </script>
+
+</html>
